@@ -86,6 +86,7 @@
                             <asp:MenuItem Text="About" NavigateUrl="~/About"></asp:MenuItem>
                             <asp:MenuItem Text="Queries">
                                 <asp:MenuItem Text="First Sample" NavigateUrl="~/SamplePages/FirstLinqSample"></asp:MenuItem>
+                                <asp:MenuItem Text="Albums by Year Released" NavigateUrl="~/SamplePages/AlbumsByYearRelease"></asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="Contact" NavigateUrl="~/Contact"></asp:MenuItem>
                         </Items>
