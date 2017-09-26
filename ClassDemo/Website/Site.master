@@ -49,11 +49,12 @@
                     <a class="navbar-brand" runat="server" href="~/">DMIT2018</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
+                    <!-- Default menu. -->
+                    <%--<ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
                         <li><a runat="server" href="~/About">About</a></li>
                         <li><a runat="server" href="~/Contact">Contact</a></li>
-                    </ul>
+                    </ul>--%>
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
                             <ul class="nav navbar-nav navbar-right">
@@ -70,6 +71,26 @@
                             </ul>
                         </LoggedInTemplate>
                     </asp:LoginView>
+                    <asp:Menu ID="NavMenu" runat="server"
+                        BackColor="#000000" BorderColor="Red"
+                        StaticMenuItemStyle-ForeColor="#999999"
+                        StaticMenuItemStyle-Font-Size="Larger"
+                        StaticMenuItemStyle-VerticalPadding="15px"
+                        StaticMenuItemStyle-HorizontalPadding="10px"
+                        RenderingMode="List" Orientation="Horizontal"
+                        DynamicMenuItemStyle-ForegroundColor="#999999"
+                        DynamicMenuItemStyle-Font-Size="Medium"
+                        DynamicMenuStyle-BackgroundColor="Black">
+                        <Items>
+                            <asp:MenuItem Text="Home" NavigateUrl="~/"></asp:MenuItem>
+                            <asp:MenuItem Text="About" NavigateUrl="~/About"></asp:MenuItem>
+                            <asp:MenuItem Text="Queries">
+                                <asp:MenuItem Text="First Sample" NavigateUrl="~/SamplePages/FirstLinqSample"></asp:MenuItem>
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Contact" NavigateUrl="~/Contact"></asp:MenuItem>
+                        </Items>
+                    </asp:Menu>
+
                 </div>
             </div>
         </div>
