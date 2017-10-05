@@ -14,6 +14,62 @@
                 <ItemTemplate>
                     <h4>Album: <%# string.Format("{0} ({1}) Tracks: {2}",
                         Eval("Title"), Eval("ReleaseYear"), Eval("TracksCount")) %></h4>
+
+                    <%-- ListView --%>
+                    <asp:ListView ID="TrackList" runat="server"
+                        DataSource='<%# Item.Tracks %>'
+                        ItemType="Chinook.Data.POCOs.TrackPOCO">
+                        <LayoutTemplate>
+                            <table>
+                                <tr>
+                                    <th>Song</th>
+                                    <th>Length</th>
+                                </tr>
+                                <tr id="itemPlaceholder" runat="server"></tr>
+                            </table>
+                        </LayoutTemplate>
+                        <ItemTemplate>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="Label1" runat="server" Text="<%# Item.Name %>"
+                                            Width="600px"></asp:Label>
+                                </td>
+                                <td>
+                                    <asp:Label ID="Label2" runat="server" Text="<%# Item.Milliseconds %>"></asp:Label>
+                                </td>
+                            </tr>
+                        </ItemTemplate>
+                        <EmptyDataTemplate>
+                            <p>No data available at this time.</p>
+                        </EmptyDataTemplate>
+                    </asp:ListView>
+
+                    <%-- GridView
+                    <asp:GridView ID="TrackList" runat="server"
+                        DataSource='<%# Item.Tracks %>'
+                        ItemType="Chinook.Data.POCOs.TrackPOCO" AutoGenerateColumns="False"
+                        GridLines="None">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Song">
+                                <HeaderStyle HorizontalAlign="Left"></HeaderStyle>
+                                <ItemStyle HorizontalAlign="Left"></ItemStyle>
+                                <ItemTemplate>
+                                    <asp:Label ID="Label1" runat="server" Text="<%# Item.Name %>"
+                                        Width="600px"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Length">
+                                <ItemStyle HorizontalAlign="Right"></ItemStyle>
+                                <ItemTemplate>
+                                    <asp:Label ID="Label2" runat="server" Text="<%# Item.Milliseconds %>"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <EmptyDataTemplate>
+                            <p>No data available at this time.</p>
+                        </EmptyDataTemplate>
+                    </asp:GridView> --%>
+                    <%-- Nested Repeater
                     <asp:Repeater ID="TrackList" runat="server"
                         DataSource='<%# Item.Tracks %>'
                         ItemType="Chinook.Data.POCOs.TrackPOCO">
@@ -33,12 +89,14 @@
                         <FooterTemplate>
                             </table>
                         </FooterTemplate>
-                    </asp:Repeater>
+                    </asp:Repeater>--%>
                 </ItemTemplate>
                 <SeparatorTemplate>
                     <hr style="height: 3px; border: none; color: aqua; background-color: aliceblue" />
                 </SeparatorTemplate>
             </asp:Repeater>
+
+
         </ItemTemplate>
     </asp:Repeater>
 
