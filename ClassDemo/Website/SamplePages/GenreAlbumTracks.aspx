@@ -39,6 +39,17 @@
                                 </td>
                             </tr>
                         </ItemTemplate>
+                        <AlternatingItemTemplate>
+                            <tr style="background-color: lightgray;">
+                                <td>
+                                    <asp:Label ID="Label1" runat="server" Text="<%# Item.Name %>"
+                                            Width="600px"></asp:Label>
+                                </td>
+                                <td>
+                                    <asp:Label ID="Label2" runat="server" Text="<%# Item.Milliseconds %>"></asp:Label>
+                                </td>
+                            </tr>
+                        </AlternatingItemTemplate>
                         <EmptyDataTemplate>
                             <p>No data available at this time.</p>
                         </EmptyDataTemplate>
