@@ -17,46 +17,23 @@ namespace ChinookSystem.BLL
     public class AlbumController
     {
         [DataObjectMethod(DataObjectMethodType.Select, true)]
-        public List<ArtistAlbumByReleaseYear> ListForArtists(int artistId)
+        public List<Album> Albums_List()
         {
             using (var context = new ChinookContext())
             {
-                return (from album in context.Albums
-                       where album.ArtistId.Equals(artistId)
-                       select new ArtistAlbumByReleaseYear
-                       {
-                           Title = album.Title,
-                           ReleaseYear = album.ReleaseYear
-                       }).ToList();
+                return context.Albums.ToList();
             }
         }
 
         [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public List<Album> Albums_ListByYearRelease(int minYear, int maxYear)
+        public Album Album_Get(int albumId)
         {
             using (var context = new ChinookContext())
             {
-                return (from album in context.Albums
-                        where album.ReleaseYear >= minYear &&
-                            album.ReleaseYear <= maxYear
-                        orderby album.ReleaseYear, album.Title
-                        select album).ToList();
+                return context.Albums.Find(albumId);
             }
         }
-
-        [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public List<Album> Albums_ListByTitle(string title)
-        {
-            using (var context = new ChinookContext())
-            {
-                var results = from x in context.Albums
-                              where x.Title.Contains(title)
-                              orderby x.Title, x.ReleaseYear
-                              select x;
-                return results.ToList();
-            }
-        }//eom
-
+        
         public int Albums_Add(Album item)
         {
             using (var context = new ChinookContext())
@@ -86,5 +63,46 @@ namespace ChinookSystem.BLL
 
             }
         }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<ArtistAlbumByReleaseYear> ListForArtists(int artistId)
+        {
+            using (var context = new ChinookContext())
+            {
+                return (from album in context.Albums
+                        where album.ArtistId.Equals(artistId)
+                        select new ArtistAlbumByReleaseYear
+                        {
+                            Title = album.Title,
+                            ReleaseYear = album.ReleaseYear
+                        }).ToList();
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<Album> Albums_ListByYearRelease(int minYear, int maxYear)
+        {
+            using (var context = new ChinookContext())
+            {
+                return (from album in context.Albums
+                        where album.ReleaseYear >= minYear &&
+                            album.ReleaseYear <= maxYear
+                        orderby album.ReleaseYear, album.Title
+                        select album).ToList();
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<Album> Albums_ListByTitle(string title)
+        {
+            using (var context = new ChinookContext())
+            {
+                var results = from x in context.Albums
+                              where x.Title.Contains(title)
+                              orderby x.Title, x.ReleaseYear
+                              select x;
+                return results.ToList();
+            }
+        }//eom
     }
 }
