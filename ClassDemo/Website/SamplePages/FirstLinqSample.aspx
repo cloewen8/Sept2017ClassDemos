@@ -19,7 +19,7 @@
     </asp:GridView>
     <asp:ObjectDataSource ID="ArtistListODS" runat="server"
         OldValuesParameterFormatString="original_{0}"
-        SelectMethod="List" TypeName="ChinookSystem.BLL.ArtistController"></asp:ObjectDataSource>
+        SelectMethod="Artists_List" TypeName="ChinookSystem.BLL.ArtistController"></asp:ObjectDataSource>
     <asp:ObjectDataSource ID="ArtistAlbumListODS" runat="server"
         OldValuesParameterFormatString="original_{0}"
         SelectMethod="ListForArtists" TypeName="ChinookSystem.BLL.AlbumController">
