@@ -15,8 +15,7 @@ public partial class SamplePages_TabbedCRUDReview : System.Web.UI.Page
     {
         Message.Text = "";
     }
-
-
+    
     protected void SearchResults_SelectedIndexChanged(object sender, EventArgs e)
     {
         SearchResults.SelectedRowStyle.BackColor = System.Drawing.Color.Turquoise;
@@ -128,5 +127,10 @@ public partial class SamplePages_TabbedCRUDReview : System.Web.UI.Page
         ArtistList.SelectedIndex = 0;
         ReleaseYear.Text = "";
         ReleaseLabel.Text = "";
+    }
+
+    protected void CheckForException(object sender, ObjectDataSourceStatusEventArgs e)
+    {
+        MessageUserControl.HandleDataBoundException(e);
     }
 }
