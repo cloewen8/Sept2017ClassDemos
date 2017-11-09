@@ -51,8 +51,8 @@
         </div>
         <div class="col-sm-10">
             <asp:Label ID="Label5" runat="server" Text="Tracks"></asp:Label>&nbsp;&nbsp;
-            <asp:Label ID="TracksBy" runat="server" ></asp:Label>&nbsp;&nbsp;
-            <asp:Label ID="SearchArgID" runat="server" ></asp:Label><br />
+            <asp:HiddenField ID="TracksBy" runat="server" ></asp:HiddenField>&nbsp;&nbsp;
+            <asp:HiddenField ID="SearchArgID" runat="server" ></asp:HiddenField><br />
             <asp:ListView ID="TracksSelectionList" runat="server" 
                 DataSourceID="TrackSelectionListODS"
                  OnItemCommand="TracksSelectionList_ItemCommand">
@@ -209,8 +209,8 @@
                     </asp:TemplateField>
                 </Columns>
                 <EmptyDataTemplate>
-                No data to view for the playlist.
-            </EmptyDataTemplate>
+                    No data to view for the playlist.
+                </EmptyDataTemplate>
             </asp:GridView>
         </div>
     </div>
@@ -245,8 +245,8 @@
         TypeName="ChinookSystem.BLL.TrackController"
          OnSelected="CheckForException">
         <SelectParameters>
-            <asp:ControlParameter ControlID="TracksBy" PropertyName="Text" Name="tracksby" Type="String"></asp:ControlParameter>
-            <asp:ControlParameter ControlID="SearchArgID" PropertyName="Text" Name="argid" Type="Int32"></asp:ControlParameter>
+            <asp:ControlParameter ControlID="TracksBy" PropertyName="Value" Name="tracksby" Type="String"></asp:ControlParameter>
+            <asp:ControlParameter ControlID="SearchArgID" PropertyName="Value" Name="argid" Type="Int32"></asp:ControlParameter>
         </SelectParameters>
     </asp:ObjectDataSource>
 </asp:Content>

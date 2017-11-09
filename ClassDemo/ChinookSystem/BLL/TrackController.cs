@@ -22,11 +22,81 @@ namespace ChinookSystem.BLL
         {
             using (var context = new ChinookContext())
             {
-                List<TrackList> results = null;
+                IEnumerable<TrackList> results = null;
 
-               //code to go here
+                switch (tracksby)
+                {
+                    case "Artist":
+                        results = from track in context.Tracks
+                                  orderby track.Name
+                                  where track.Album.Artist.ArtistId == argid
+                                  select new TrackList
+                                  {
+                                      TrackID = track.TrackId,
+                                      Name = track.Name,
+                                      Title = track.Album.Title,
+                                      MediaName = track.MediaType.Name,
+                                      GenreName = track.Genre.Name,
+                                      Composer = track.Composer,
+                                      Milliseconds = track.Milliseconds,
+                                      Bytes = track.Bytes,
+                                      UnitPrice = track.UnitPrice
+                                  };
+                        break;
+                    case "MediaType":
+                        results = from track in context.Tracks
+                                  orderby track.Name
+                                  where track.MediaType.MediaTypeId == argid
+                                  select new TrackList
+                                  {
+                                      TrackID = track.TrackId,
+                                      Name = track.Name,
+                                      Title = track.Album.Title,
+                                      MediaName = track.MediaType.Name,
+                                      GenreName = track.Genre.Name,
+                                      Composer = track.Composer,
+                                      Milliseconds = track.Milliseconds,
+                                      Bytes = track.Bytes,
+                                      UnitPrice = track.UnitPrice
+                                  };
+                        break;
+                    case "Genre":
+                        results = from track in context.Tracks
+                                  orderby track.Name
+                                  where track.Genre.GenreId == argid
+                                  select new TrackList
+                                  {
+                                      TrackID = track.TrackId,
+                                      Name = track.Name,
+                                      Title = track.Album.Title,
+                                      MediaName = track.MediaType.Name,
+                                      GenreName = track.Genre.Name,
+                                      Composer = track.Composer,
+                                      Milliseconds = track.Milliseconds,
+                                      Bytes = track.Bytes,
+                                      UnitPrice = track.UnitPrice
+                                  };
+                        break;
+                    default: // Album
+                        results = from track in context.Tracks
+                                  orderby track.Name
+                                  where track.Album.AlbumId == argid
+                                  select new TrackList
+                                  {
+                                      TrackID = track.TrackId,
+                                      Name = track.Name,
+                                      Title = track.Album.Title,
+                                      MediaName = track.MediaType.Name,
+                                      GenreName = track.Genre.Name,
+                                      Composer = track.Composer,
+                                      Milliseconds = track.Milliseconds,
+                                      Bytes = track.Bytes,
+                                      UnitPrice = track.UnitPrice
+                                  };
+                        break;
+                }
 
-                return results;
+                return results.ToList();
             }
         }//eom
 
