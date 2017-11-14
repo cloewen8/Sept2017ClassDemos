@@ -17,7 +17,7 @@
                 DataSourceID="ArtistDDLODS" 
                 DataTextField="DisplayText" 
                 DataValueField="IDValueField"
-                 Width="150px">
+                Width="150px">
             </asp:DropDownList><br />
             <asp:Button ID="ArtistFetch" runat="server" Text="Fetch" OnClick="ArtistFetch_Click" />
             <br /><br />

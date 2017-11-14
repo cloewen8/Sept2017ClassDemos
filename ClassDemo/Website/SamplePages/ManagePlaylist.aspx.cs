@@ -91,10 +91,26 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
         }
     }
 
-    protected void TracksSelectionList_ItemCommand(object sender, 
+    protected void TracksSelectionList_ItemCommand(object sender,
         ListViewCommandEventArgs e)
     {
-        //code to go here
+        if (!string.IsNullOrEmpty(PlaylistName.Text))
+        {
+            MessageUserControl.TryRun(() =>
+            {
+                PlaylistTracksController controller = new PlaylistTracksController();
+                List<UserPlaylistTrack> tracks = controller.Add_TrackToPLaylist(
+                    PlaylistName.Text,
+                    User.Identity.Name,
+                    int.Parse(e.CommandArgument.ToString()));
+                TracksSelectionList.DataSource = tracks;
+                TracksSelectionList.DataBind();
+            });
+        }
+        else
+        {
+            MessageUserControl.ShowInfo("Warning", "The playlist name is required.");
+        }
     }
 
     protected void MoveUp_Click(object sender, EventArgs e)
