@@ -91,12 +91,80 @@ namespace ChinookSystem.BLL
                 return List_TracksForPlaylist(playlistname, username);
             }
         }//eom
-        public void MoveTrack(string username, string playlistname, int trackid, int tracknumber, string direction)
+        public void MoveTrack(string username, string playlistname, int trackid, string direction)
         {
             using (var context = new ChinookContext())
             {
-                //code to go here 
+                // Get playlist id
+                Playlist existing = (from playlist in context.Playlists
+                                     where playlist.UserName.Equals(username) &&
+                                         playlist.Name.Equals(playlistname)
+                                     select playlist).FirstOrDefault();
+                PlaylistTrack track = null;
+                PlaylistTrack other = null;
 
+                if (existing == null)
+                {
+                    throw new Exception("The playlist is missing.");
+                }
+                else
+                {
+                    int tracknumber;
+                    track = existing.PlaylistTracks.Where(checking =>
+                        checking.TrackId == trackid).FirstOrDefault();
+                    tracknumber = track.TrackNumber;
+                    
+                    // FIXME: Messed up the directions. Check them later (username: AAdams, playlist: name2).
+                    if (direction == "up")
+                    {
+                        // up
+                        if (tracknumber > 1)
+                        {
+                            other = existing.PlaylistTracks.Where(checking =>
+                                checking.TrackNumber == track.TrackNumber - 1).FirstOrDefault();
+
+                            if (other == null)
+                            {
+                                throw new Exception("The track above is missing.");
+                            }
+                            else
+                            {
+                                other.TrackNumber++;
+                                track.TrackNumber--;
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Unable to move the track up.");
+                        }
+                    }
+                    else if (direction == "down")
+                    {
+                        // down
+                        if (tracknumber < existing.PlaylistTracks.Count)
+                        {
+                            other = existing.PlaylistTracks.Where(checking =>
+                                checking.TrackNumber == track.TrackNumber + 1).FirstOrDefault();
+
+                            if (other == null)
+                            {
+                                throw new Exception("The track below is missing.");
+                            }
+                            else
+                            {
+                                other.TrackNumber--;
+                                track.TrackNumber++;
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Unable to move the track up.");
+                        }
+                    }
+                }
+                context.Entry(track).Property(entity => entity.TrackNumber).IsModified = true;
+                context.Entry(other).Property(entity => entity.TrackNumber).IsModified = true;
+                context.SaveChanges();
             }
         }//eom
 

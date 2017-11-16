@@ -98,13 +98,14 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
         {
             MessageUserControl.TryRun(() =>
             {
+                // FIXME: May be setting the datasource for the wrong control. Check what was uploaded by the instructor.
                 PlaylistTracksController controller = new PlaylistTracksController();
                 List<UserPlaylistTrack> tracks = controller.Add_TrackToPLaylist(
                     PlaylistName.Text,
                     User.Identity.Name,
                     int.Parse(e.CommandArgument.ToString()));
-                TracksSelectionList.DataSource = tracks;
-                TracksSelectionList.DataBind();
+                PlayList.DataSource = tracks;
+                PlayList.DataBind();
             });
         }
         else
@@ -115,17 +116,70 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
 
     protected void MoveUp_Click(object sender, EventArgs e)
     {
-        //code to go here
+        if (PlayList.Rows.Count == 0)
+        {
+            MessageUserControl.ShowInfo("Unable to move tracks in an empty playlist.");
+        }
+        else if (string.IsNullOrEmpty(PlaylistName.Text))
+        {
+            MessageUserControl.ShowInfo("The playlist name is empty.");
+        }
+        else
+        {
+            MessageUserControl.TryRun(() =>
+            {
+                MoveTrack(GetMovingTrack(), "up");
+            }, "Success", "The track has been moved up.");
+        }
     }
 
     protected void MoveDown_Click(object sender, EventArgs e)
     {
-        //code to go here
+        if (PlayList.Rows.Count == 0)
+        {
+            MessageUserControl.ShowInfo("Unable to move tracks in an empty playlist.");
+        }
+        else if (string.IsNullOrEmpty(PlaylistName.Text))
+        {
+            MessageUserControl.ShowInfo("The playlist name is empty.");
+        }
+        else
+        {
+            MessageUserControl.TryRun(() =>
+            {
+                MoveTrack(GetMovingTrack(), "down");
+            }, "Success", "The track has been moved down.");
+        }
     }
-    protected void MoveTrack(int trackid, int tracknumber, string direction)
+
+    private int GetMovingTrack()
     {
-        //code to go here
+        CheckBox box;
+        int trackId = 0;
+        int rowsSelected = 0;
+        for (int i = 0; i < PlayList.Rows.Count; i++) {
+            box = PlayList.Rows[i].FindControl("Selected") as CheckBox;
+            if (box.Checked)
+            {
+                trackId = int.Parse((PlayList.Rows[i].FindControl("TrackId") as Label).Text);
+                rowsSelected++;
+            }
+        }
+        if (rowsSelected > 1)
+        {
+            throw new Exception("Select only one track.");
+        }
+        return trackId;
     }
+
+    private void MoveTrack(int trackid, string direction)
+    {
+        PlaylistTracksController controller = new PlaylistTracksController();
+        controller.MoveTrack(User.Identity.Name, PlaylistName.Text, trackid, direction);
+        PlayList.DataSource = controller.List_TracksForPlaylist(PlaylistName.Text, User.Identity.Name);
+        PlayList.DataBind();
+    }
+
     protected void DeleteTrack_Click(object sender, EventArgs e)
     {
         //code to go here
