@@ -100,6 +100,22 @@ namespace ChinookSystem.BLL
             }
         }//eom
 
-       
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<GenreAlbumReport> GenreAlbumReport_Get()
+        {
+            using (var context = new ChinookContext())
+            {
+                return (from track in context.Tracks
+                          select new GenreAlbumReport
+                          {
+                              GenreName = track.Genre.Name,
+                              AlbumTitle = track.Album.Title,
+                              TrackName = track.Name,
+                              Milliseconds = track.Milliseconds,
+                              Bytes = track.Bytes,
+                              UnitPrice = track.UnitPrice
+                          }).ToList();
+            }
+        }
     }//eoc
 }
