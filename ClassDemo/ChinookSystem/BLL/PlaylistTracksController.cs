@@ -118,10 +118,10 @@ namespace ChinookSystem.BLL
                     if (direction == "up")
                     {
                         // up
-                        if (tracknumber > 1)
+                        if (tracknumber >= 1)
                         {
                             other = existing.PlaylistTracks.Where(checking =>
-                                checking.TrackNumber == track.TrackNumber - 1).FirstOrDefault();
+                                checking.TrackNumber == track.TrackNumber + 1).FirstOrDefault();
 
                             if (other == null)
                             {
@@ -129,8 +129,8 @@ namespace ChinookSystem.BLL
                             }
                             else
                             {
-                                other.TrackNumber++;
-                                track.TrackNumber--;
+                                other.TrackNumber--;
+                                track.TrackNumber++;
                             }
                         }
                         else
@@ -141,10 +141,10 @@ namespace ChinookSystem.BLL
                     else if (direction == "down")
                     {
                         // down
-                        if (tracknumber < existing.PlaylistTracks.Count)
+                        if (tracknumber <= existing.PlaylistTracks.Count)
                         {
                             other = existing.PlaylistTracks.Where(checking =>
-                                checking.TrackNumber == track.TrackNumber + 1).FirstOrDefault();
+                                checking.TrackNumber == track.TrackNumber - 1).FirstOrDefault();
 
                             if (other == null)
                             {
@@ -152,8 +152,8 @@ namespace ChinookSystem.BLL
                             }
                             else
                             {
-                                other.TrackNumber--;
-                                track.TrackNumber++;
+                                other.TrackNumber++;
+                                track.TrackNumber--;
                             }
                         }
                         else
