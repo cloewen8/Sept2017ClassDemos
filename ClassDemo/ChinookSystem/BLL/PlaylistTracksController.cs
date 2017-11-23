@@ -16,6 +16,13 @@ namespace ChinookSystem.BLL
 {
     public class PlaylistTracksController
     {
+        private Playlist GetPlaylistByName(ChinookContext context, string playlistname, string username)
+        {
+            return (from playlist in context.Playlists
+                    where playlist.UserName.Equals(username) &&
+                        playlist.Name.Equals(playlistname)
+                    select playlist).FirstOrDefault();
+        }
         public List<UserPlaylistTrack> List_TracksForPlaylist(
             string playlistname, string username)
         {
@@ -23,10 +30,7 @@ namespace ChinookSystem.BLL
             {
                 List<UserPlaylistTrack> tracks;
 
-                Playlist result = (from playlist in context.Playlists
-                           where playlist.UserName.Equals(username) &&
-                               playlist.Name.Equals(playlistname)
-                           select playlist).FirstOrDefault();
+                Playlist result = GetPlaylistByName(context, playlistname, username);
                 if (result == null)
                 {
                     tracks = null;
@@ -53,10 +57,7 @@ namespace ChinookSystem.BLL
         {
             using (var context = new ChinookContext())
             {
-                Playlist existing = (from playlist in context.Playlists
-                                 where playlist.UserName.Equals(username) &&
-                                     playlist.Name.Equals(playlistname)
-                                 select playlist).FirstOrDefault();
+                Playlist existing = GetPlaylistByName(context, playlistname, username);
                 int trackNumber;
                 PlaylistTrack track = null;
 
@@ -96,10 +97,7 @@ namespace ChinookSystem.BLL
             using (var context = new ChinookContext())
             {
                 // Get playlist id
-                Playlist existing = (from playlist in context.Playlists
-                                     where playlist.UserName.Equals(username) &&
-                                         playlist.Name.Equals(playlistname)
-                                     select playlist).FirstOrDefault();
+                Playlist existing = GetPlaylistByName(context, playlistname, username);
                 PlaylistTrack track = null;
                 PlaylistTrack other = null;
 
@@ -114,7 +112,6 @@ namespace ChinookSystem.BLL
                         checking.TrackId == trackid).FirstOrDefault();
                     tracknumber = track.TrackNumber;
                     
-                    // FIXME: Messed up the directions. Check them later (username: AAdams, playlist: name2).
                     if (direction == "up")
                     {
                         // up
@@ -173,9 +170,37 @@ namespace ChinookSystem.BLL
         {
             using (var context = new ChinookContext())
             {
-               //code to go here
+                Playlist existing = GetPlaylistByName(context, playlistname, username);
+                if (existing != null)
+                {
+                    List<PlaylistTrack> keep = existing.PlaylistTracks.Where(track =>
+                        !trackstodelete.Any(trackId => trackId == track.TrackId)).Select(track =>
+                            track).ToList();
+                    PlaylistTrack deleting = null;
+                    int cursor = 0;
 
-
+                    // Delete tracks.
+                    foreach (int deletingId in trackstodelete)
+                    {
+                        deleting = existing.PlaylistTracks.Where(other => other.TrackId == deletingId).FirstOrDefault();
+                        if (deleting != null)
+                        {
+                            existing.PlaylistTracks.Remove(deleting);
+                        }
+                    }
+                    // Reorder tracks.
+                    foreach (PlaylistTrack kept in keep)
+                    {
+                        cursor++;
+                        kept.TrackNumber = cursor;
+                        context.Entry(kept).Property("TrackNumber").IsModified = true;
+                    }
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("The playlist does not exist (the playlistmay have been deleted).");
+                }
             }
         }//eom
     }

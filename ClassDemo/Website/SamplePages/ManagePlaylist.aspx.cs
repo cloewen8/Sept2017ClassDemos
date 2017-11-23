@@ -98,7 +98,6 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
         {
             MessageUserControl.TryRun(() =>
             {
-                // FIXME: May be setting the datasource for the wrong control. Check what was uploaded by the instructor.
                 PlaylistTracksController controller = new PlaylistTracksController();
                 List<UserPlaylistTrack> tracks = controller.Add_TrackToPLaylist(
                     PlaylistName.Text,
@@ -126,10 +125,16 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
         }
         else
         {
-            MessageUserControl.TryRun(() =>
+            List<int> tracks = GetSelectedTracks();
+            if (tracks.Count == 1)
             {
-                MoveTrack(GetMovingTrack(), "up");
-            }, "Success", "The track has been moved up.");
+                MessageUserControl.ShowInfo("Warning", "Select only one track.");
+            }
+            else
+            {
+                MoveTrack(tracks.First(), "up");
+                MessageUserControl.ShowInfo("Success", "The track has been moved up.");
+            }
         }
     }
 
@@ -145,31 +150,31 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
         }
         else
         {
-            MessageUserControl.TryRun(() =>
+            List<int> tracks = GetSelectedTracks();
+            if (tracks.Count == 1)
             {
-                MoveTrack(GetMovingTrack(), "down");
-            }, "Success", "The track has been moved down.");
+                MessageUserControl.ShowInfo("Warning", "Select only one track.");
+            }
+            else
+            {
+                MoveTrack(tracks.First(), "down");
+                MessageUserControl.ShowInfo("Success", "The track has been moved down.");
+            }
         }
     }
 
-    private int GetMovingTrack()
+    private List<int> GetSelectedTracks()
     {
         CheckBox box;
-        int trackId = 0;
-        int rowsSelected = 0;
+        List<int> tracks = new List<int>();
         for (int i = 0; i < PlayList.Rows.Count; i++) {
             box = PlayList.Rows[i].FindControl("Selected") as CheckBox;
             if (box.Checked)
             {
-                trackId = int.Parse((PlayList.Rows[i].FindControl("TrackId") as Label).Text);
-                rowsSelected++;
+                tracks.Add(int.Parse((PlayList.Rows[i].FindControl("TrackId") as Label).Text));
             }
         }
-        if (rowsSelected > 1)
-        {
-            throw new Exception("Select only one track.");
-        }
-        return trackId;
+        return tracks;
     }
 
     private void MoveTrack(int trackid, string direction)
@@ -182,6 +187,34 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
 
     protected void DeleteTrack_Click(object sender, EventArgs e)
     {
-        //code to go here
+        if (PlayList.Rows.Count > 0)
+        {
+            if (!string.IsNullOrEmpty(PlaylistName.Text))
+            {
+                List<int> tracks = GetSelectedTracks();
+                if (tracks.Count > 0)
+                {
+                    MessageUserControl.TryRun(() =>
+                    {
+                        PlaylistTracksController controller = new PlaylistTracksController();
+                        controller.DeleteTracks(User.Identity.Name, PlaylistName.Text, tracks);
+                        PlayList.DataSource = controller.List_TracksForPlaylist(PlaylistName.Text, User.Identity.Name);
+                        PlayList.DataBind();
+                    }, "Success", "The tracks have been deleted.");
+                }
+                else
+                {
+                    MessageUserControl.ShowInfo("Warning", "Please select at least one track to remove.");
+                }
+            }
+            else
+            {
+                MessageUserControl.ShowInfo("Unable to delete", "You must supply a playlist name before deleting.");
+            }
+        }
+        else
+        {
+            MessageUserControl.ShowInfo("Unable to delete", "You need to fetch a playlist before deleting.");
+        }
     }
 }
